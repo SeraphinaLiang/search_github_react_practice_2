@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import {InputGroup, FormControl, Button, Badge} from 'react-bootstrap'
+import Badge from 'react-bootstrap/Badge'
+import {InputGroup, FormControl, Button} from 'react-bootstrap'
 import axios from 'axios'
-import PubSub from 'pubsub-js'
 
 export default class Search extends Component {
 
@@ -11,19 +11,15 @@ export default class Search extends Component {
         const msg = this.searchInfo.current.value
         if (msg.trim() === '') return
 
-        // 消息发布，PubSub.publish('topic', data)
-        PubSub.publish('notice', {isFirst: false, isLoading: true})
-        //this.props.updateUser({isFirst: false,isLoading: true})
+        this.props.updateUser({isFirst: false,isLoading: true})
 
         axios.get(`https://api.github.com/search/users?q=${msg}`).then(
             response => {
-                const users = response.data.items
-                //this.props.updateUser({isLoading: false,users:users})
-                PubSub.publish('notice', {isLoading: false, users: users})
+                const users=response.data.items
+                this.props.updateUser({isLoading: false,users:users})
             },
             error => {
-                //this.props.updateUser({isLoading: false,err:error.message})
-                PubSub.publish('notice', {isLoading: false, err: error.message})
+                this.props.updateUser({isLoading: false,err:error.message})
             }
         )
     }

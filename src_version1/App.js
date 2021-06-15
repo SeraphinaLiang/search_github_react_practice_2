@@ -6,14 +6,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default class App extends Component {
 
-    /**
-     *增加了消息发表与订阅，实现了兄弟组件间的通信
-     */
-    render() {
+    state = {
+        users:[],
+        isFirst:true,
+        isLoading:false,
+        err:'',
+    }
+
+    updateUser=(stateObj)=>{
+        this.setState(stateObj)
+    }
+
+    render(){
         return (
             <div className="App">
-                <Search/>
-                <List/>
+                <Search updateUser={this.updateUser}/>
+                <List {...this.state}/>
             </div>
         )
     }
